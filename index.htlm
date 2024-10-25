@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech with Dynamic Pause</title>
+</head>
+<body>
+    <h1>Text to Speech Converter</h1>
+    <textarea id="text" rows="10" cols="50" placeholder="Enter your text here"></textarea><br><br>
+    <button onclick="speak()">Speak</button>
+
+    <script>
+        function speak() {
+            const paragraph = document.getElementById("text").value;
+            const words = paragraph.split(" ");
+
+            let i = 0;
+            function speakWord() {
+                if (i < words.length) {
+                    let utterance = new SpeechSynthesisUtterance(words[i]);
+                    utterance.rate = 1.2;  // Speed of speech
+                    utterance.pitch = 1;   // Pitch of the voice
+                    utterance.lang = 'en-US';  // Voice language
+
+                    // Speak the word
+                    speechSynthesis.speak(utterance);
+
+                    // Set a pause duration based on word length
+                    const wordLength = words[i].length;
+                    const pauseDuration = wordLength * 150; // 150 ms per letter
+
+                    // After speaking the word, wait before speaking the next one
+                    utterance.onend = function() {
+                        i++;
+                        setTimeout(speakWord, pauseDuration); // Adjust pause dynamically
+                    };
+                }
+            }
+            speakWord();
+        }
+    </script>
+</body>
+</html>
+  
